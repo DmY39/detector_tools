@@ -10,10 +10,20 @@ def get_list_files(path_dir):
     xml_files = [f for f in files if f.split('.')[-1] == 'xml']
     return xml_files
 
+
 def parse_xml_files(path_dir):
     # get info from every xml_files
     list_xml_files = get_list_files(path_dir)
-    [print(f) for f in list_xml_files]
+    list_xml_files = [os.path.join(path_dir, f) for f in list_xml_files]
+    for f in list_xml_files:
+        print(f)
+        dom = xml.dom.minidom.parse(f).normalize()
+        width = dom.getElementsByTagName("width")[0]
+        print("name=" + width.nodeName)
+        print("attr=" + width.getAttribute("width"))
+        print("attr=" + width.attributes.item(0).value)
+        print(width)
+
 
 if __name__ == "__main__":
     parse = argparse.ArgumentParser()
@@ -22,7 +32,6 @@ if __name__ == "__main__":
     args = parse.parse_args()
 
     parse_xml_files(args.dts)
-    print(get_list_files(args.gst))
 
     print('End program')
 
