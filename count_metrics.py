@@ -27,17 +27,16 @@ def parse_xml_files(path_dir):
             dict = {}
             # add key label and item class
             class_object = obj.find('name').text
-            dict[os.path.basename(xml_file)] = class_object
+            dict['label'] = class_object
 
-            # add key 'rect' and items
-            for x_tl in obj.iter('xmin'):
-                dict['rect'] = [x_tl.text]
-            for y_tl in obj.iter('ymin'):
-                dict['rect'].append(y_tl.text)
-            for width in root.iter('width'):
-                dict['rect'].append(width.text)
-            for height in root.iter('height'):
-                dict['rect'].append(height.text)
+            # find rect for every object
+            for rect in obj.findall('bndbox'):
+                x_tl = int(rect.find('xmin').text)
+                y_tl = int(rect.find('ymin').text)
+                width = int(rect.find('xmax').text) - int(rect.find('xmin').text)
+                height = int(rect.find('ymax').text) - int(rect.find('ymin').text)
+                dict['rect'] = [x_tl, y_tl, width, height]
+
             # add dict in list_dict
             list_dict.append(dict)
 
