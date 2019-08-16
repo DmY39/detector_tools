@@ -43,14 +43,36 @@ def parse_xml_files(path_dir):
     return list_dict
 
 
+def intersection_over_union(path_dir):
+    rect1 = parse_xml_files(path_dir)[0]['rect']
+    rect2 = parse_xml_files(path_dir)[1]['rect']
+    xA = max(rect1[0], rect2[0])
+    yA = max(rect1[1], rect2[1])
+    xB = min((rect1[0]+rect1[2]), (rect2[0]+rect2[2]))
+    yB = min((rect1[1]+rect1[3]), (rect2[1]+rect2[3]))
+
+    interArea = max(0, xB - xA + 1) * max(0, yB - yA + 1)
+    print(interArea)
+    # area for every rect
+    boxAArea = (rect1[2] + 1) * (rect1[3] + 1)
+    boxBArea = (rect2[2] + 1) * (rect2[3] + 1)
+
+    iou = interArea / float(boxAArea + boxBArea - interArea)
+    return iou
+
+    # if (rect1[0]+rect1[2]) < rect2[0] or (rect1[1]+rect1[3]) < rect2[1]:
+    #     return 0
+
+
 if __name__ == "__main__":
     parse = argparse.ArgumentParser()
     parse.add_argument('-d', '--dts', help='directory dts')
     parse.add_argument('-g', '--gst', help='directory gst')
     args = parse.parse_args()
 
-    print(parse_xml_files(args.dts))
-
+    print(parse_xml_files(args.dts)[0]['rect'])
+    print(parse_xml_files(args.dts)[1]['rect'])
+    print(intersection_over_union(args.dts))
     print('End program')
 
 
