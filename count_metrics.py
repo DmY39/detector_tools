@@ -43,16 +43,15 @@ def parse_xml_files(path_dir):
     return list_dict
 
 
-def intersection_over_union(path_dir):
-    rect1 = parse_xml_files(path_dir)[0]['rect']
-    rect2 = parse_xml_files(path_dir)[1]['rect']
+def intersection_over_union(rect1, rect2):
+    # rect1 = parse_xml_files(path_dir)[0]['rect']
+    # rect2 = parse_xml_files(path_dir)[1]['rect']
     xA = max(rect1[0], rect2[0])
     yA = max(rect1[1], rect2[1])
     xB = min((rect1[0]+rect1[2]), (rect2[0]+rect2[2]))
     yB = min((rect1[1]+rect1[3]), (rect2[1]+rect2[3]))
 
     interArea = max(0, xB - xA + 1) * max(0, yB - yA + 1)
-    print(interArea)
     # area for every rect
     boxAArea = (rect1[2] + 1) * (rect1[3] + 1)
     boxBArea = (rect2[2] + 1) * (rect2[3] + 1)
@@ -70,9 +69,13 @@ if __name__ == "__main__":
     parse.add_argument('-g', '--gst', help='directory gst')
     args = parse.parse_args()
 
-    print(parse_xml_files(args.dts)[0]['rect'])
-    print(parse_xml_files(args.dts)[1]['rect'])
-    print(intersection_over_union(args.dts))
+    print(parse_xml_files(args.dts))
+    print(parse_xml_files(args.gst))
+
+    print(intersection_over_union(parse_xml_files(args.dts)[0]['rect'], parse_xml_files(args.gst)[0]['rect']))
+
+    print('iou = ', intersection_over_union([774, 355, 71, 25], [774, 355, 75, 30]))
+    print(intersection_over_union(parse_xml_files(args.dts)[0]['rect'], parse_xml_files(args.dts)[1]['rect']))
     print('End program')
 
 
