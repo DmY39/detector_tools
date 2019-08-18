@@ -75,13 +75,11 @@ def comparison_dict(path_dts, path_gst):
                 # get two list dict from two path
                 list_dict_dts = parse_xml_files(os.path.join(path_dts, xml_dts))
                 list_dict_gst = parse_xml_files(os.path.join(path_gst, xml_gst))
-                list_iou = []
-                print(len(list_dict_dts))
-                print(len(list_dict_gst))
-                for dict_dts in list_dict_dts:
-                    for dict_gst in list_dict_gst:
-                        if d
-                            print(intersection_over_union(dict_dts['rect'], dict_gst['rect']))
+                for i in range(len(list_dict_dts)):
+                    for j in range(len(list_dict_gst)):
+                        if i == j:
+                            print(intersection_over_union(list_dict_dts[i]['rect'], list_dict_gst[i]['rect']))
+                print('\n')
 
 
 if __name__ == "__main__":
