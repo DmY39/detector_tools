@@ -4,6 +4,11 @@ import xml.etree.cElementTree as ET
 
 
 def get_list_files(path_dir):
+    """
+    @brief Find xml files in the specified path
+    @param path_dir path for finding xml files
+    @return xml_files list of xml files in the path
+    """
     # get all files in path_dir
     files = os.listdir(path_dir)
     # get list of special files
@@ -12,13 +17,12 @@ def get_list_files(path_dir):
 
 
 def parse_xml_files(path_dir_xml):
+    """
+    @brief Parsing an xml file and creating a dictionary of the form {'label' : 'same_class', 'rect':[x_tl, y_tl, width, height]}
+    @param path_dir_xml path to xml file
+    @return list_dict dictionary of the form {'label' : 'same_class', 'rect':[x_tl, y_tl, width, height]}
+    """
     list_dict = []
-    # get info from every xml_files
-    # list_xml_files = get_list_files(path_dir)
-    # path + name_file
-    # list_xml_files = [os.path.join(path_dir, f) for f in list_xml_files]
-
-    # for xml_file in list_xml_files:
     tree = ET.parse(path_dir_xml)
     root = tree.getroot()
 
@@ -44,8 +48,12 @@ def parse_xml_files(path_dir_xml):
 
 
 def intersection_over_union(rect1, rect2):
-    # rect1 = parse_xml_files(path_dir)[0]['rect']
-    # rect2 = parse_xml_files(path_dir)[1]['rect']
+    """
+    @brief function for finding intersection over union for two rectangles
+    @param rect1 rect_first = [x_tl, y_tl, width, height]
+    @param rect2 rect_second = [x_tl, y_tl, width, height]
+    @return iou intersection over union
+    """
     xA = max(rect1[0], rect2[0])
     yA = max(rect1[1], rect2[1])
     xB = min((rect1[0]+rect1[2]), (rect2[0]+rect2[2]))
@@ -59,11 +67,14 @@ def intersection_over_union(rect1, rect2):
     iou = interArea / float(boxAArea + boxBArea - interArea)
     return iou
 
-    # if (rect1[0]+rect1[2]) < rect2[0] or (rect1[1]+rect1[3]) < rect2[1]:
-    #     return 0
-
 
 def comparison_dict(path_dts, path_gst):
+    """
+    @brief Comparison two dictionaries from two folders and finding iou for every dict
+    @param path_dts path with xml files dts
+    @param path_gst path with xml files gst
+    @return iou intersection over union for every object
+    """
     # we get two list with xml_files from different path
     list_xml_dts = get_list_files(path_dts)
     list_xml_gst = get_list_files(path_gst)
@@ -84,12 +95,6 @@ def comparison_dict(path_dts, path_gst):
                             iou = iou_prom
                     print(iou)
 
-
-
-                # for i in range(len(list_dict_dts)):
-                #     for j in range(len(list_dict_gst)):
-                #         if i == j:
-                #             print(intersection_over_union(list_dict_dts[i]['rect'], list_dict_gst[i]['rect']))
                 print('\n')
 
 
@@ -99,12 +104,10 @@ if __name__ == "__main__":
     parse.add_argument('-g', '--gst', help='directory gst')
     args = parse.parse_args()
 
-    # print(parse_xml_files(args.dts))
     comparison_dict(args.dts, args.gst)
-    # print(intersection_over_union(parse_xml_files(args.dts)[0]['rect'], parse_xml_files(args.gst)[0]['rect']))
 
     print('iou = ', intersection_over_union([774, 355, 71, 25], [774, 355, 75, 30]))
-    # print(intersection_over_union(parse_xml_files(args.dts)[0]['rect'], parse_xml_files(args.dts)[1]['rect']))
+
     print('End program')
 
 
