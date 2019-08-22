@@ -40,6 +40,7 @@ def parse_xml_files(path_dir_xml):
             width = int(rect.find('xmax').text) - int(rect.find('xmin').text)
             height = int(rect.find('ymax').text) - int(rect.find('ymin').text)
             dict['rect'] = [x_tl, y_tl, width, height]
+            dict['use'] = False
 
         # add dict in list_dict
         list_dict.append(dict)
@@ -68,7 +69,7 @@ def intersection_over_union(rect1, rect2):
     return iou
 
 
-def comparison_dict(path_dts, path_gst):
+def comparison_dict(path_dts, path_gst,thr_iou = 0.9):
     """
     @brief Comparison two dictionaries from two folders and finding iou for every dict
     @param path_dts path with xml files dts
@@ -91,12 +92,14 @@ def comparison_dict(path_dts, path_gst):
                     iou = 0
                     for dict_gst in list_dict_gst:
                         iou_prom = intersection_over_union(dict_dts['rect'], dict_gst['rect'])
-                        if iou_prom > 0:
+                        if iou_prom > thr_iou:
                             iou = iou_prom
+                            dict_dts['use'] = True
+                            dict_gst['use'] = True
                     print(iou)
 
-                print('\n')
 
+                print('\n')
 
 if __name__ == "__main__":
     parse = argparse.ArgumentParser()
