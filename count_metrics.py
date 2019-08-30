@@ -78,16 +78,12 @@ def finding_iou(list_dict_one, list_dict_two, thr_iou=0.9):
     @return intersection over union for every object
     """
     for dict_dts in list_dict_one:
-        iou = 0
         for dict_gst in list_dict_two:
-            if dict_dts['use'] == False or dict_gst['use'] == False:
+            if not dict_dts['use'] or not dict_gst['use']:
                 iou_prom = intersection_over_union(dict_dts['rect'], dict_gst['rect'])
                 if iou_prom > thr_iou:
-                    iou = iou_prom
                     dict_dts['use'] = True
                     dict_gst['use'] = True
-        print(iou)
-
 
 def comparison_dict(path_dts, path_gst, thr_iou=0.9):
     """
