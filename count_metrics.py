@@ -69,11 +69,32 @@ def intersection_over_union(rect1, rect2):
     return iou
 
 
-def comparison_dict(path_dts, path_gst,thr_iou = 0.9):
+def finding_iou(list_dict_one, list_dict_two, thr_iou=0.9):
+    """
+    @brief Get iou for two list dict
+    @list_dict_one
+    @list_dict_two
+    @thr_iou threshold for use
+    @return intersection over union for every object
+    """
+    for dict_dts in list_dict_one:
+        iou = 0
+        for dict_gst in list_dict_two:
+            if dict_dts['use'] == False or dict_gst['use'] == False:
+                iou_prom = intersection_over_union(dict_dts['rect'], dict_gst['rect'])
+                if iou_prom > thr_iou:
+                    iou = iou_prom
+                    dict_dts['use'] = True
+                    dict_gst['use'] = True
+        print(iou)
+
+
+def comparison_dict(path_dts, path_gst, thr_iou=0.9):
     """
     @brief Comparison two dictionaries from two folders and finding iou for every dict
     @param path_dts path with xml files dts
     @param path_gst path with xml files gst
+    @param thr_iou threshold for use
     @return iou intersection over union for every object
     """
     # we get two list with xml_files from different path
@@ -87,19 +108,21 @@ def comparison_dict(path_dts, path_gst,thr_iou = 0.9):
                 # get two list dict from two path
                 list_dict_dts = parse_xml_files(os.path.join(path_dts, xml_dts))
                 list_dict_gst = parse_xml_files(os.path.join(path_gst, xml_gst))
-
-                for dict_dts in list_dict_dts:
-                    iou = 0
-                    for dict_gst in list_dict_gst:
-                        iou_prom = intersection_over_union(dict_dts['rect'], dict_gst['rect'])
-                        if iou_prom > thr_iou:
-                            iou = iou_prom
-                            dict_dts['use'] = True
-                            dict_gst['use'] = True
-                    print(iou)
+                finding_iou(list_dict_dts, list_dict_gst)
 
 
-                print('\n')
+                # for dict_dts in list_dict_dts:
+                #     iou = 0
+                #     for dict_gst in list_dict_gst:
+                #         iou_prom = intersection_over_union(dict_dts['rect'], dict_gst['rect'])
+                #         if iou_prom > thr_iou:
+                #             iou = iou_prom
+                #             dict_dts['use'] = True
+                #             dict_gst['use'] = True
+                #     print(iou)
+                #
+                #
+                # print('\n')
 
 if __name__ == "__main__":
     parse = argparse.ArgumentParser()
